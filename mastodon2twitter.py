@@ -91,8 +91,11 @@ for post in reversed(posts):
     # print(post)
 
 ## Save last article number to tmpfile
-if articles[0]['cont_id'] != last_article:
-    f = open(tmpfile, 'w')
-    f.write(articles[0]['cont_id'])
-    f.close()
+try:
+    if articles[0]['cont_id'] != last_article:
+        f = open(tmpfile, 'w')
+        f.write(articles[0]['cont_id'])
+        f.close()
+except IndexError:
+    pass
 
