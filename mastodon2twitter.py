@@ -4,6 +4,7 @@
 import configparser, sys
 import feedparser, lxml.html, unicodedata, re, os
 import twitter
+from html import unescape
 
 ## String counter for Twitter
 def get_width_count(text):
@@ -67,11 +68,11 @@ for article in rss['entries']:
     if article['mastodon_scope'] != 'public': continue
     if not re.match('New status by ', article['title']): continue
 
-    html = article['content'][0]['value'].replace('<br />', '\n')
-    root = lxml.html.fromstring(html)
+    htmlstr = article['content'][0]['value'].replace('<br />', '\n').replace('</p><p>', '\n\n')
+    root    = lxml.html.fromstring(htmlstr)
     if len(root.xpath("//p/span[@class='h-card']")) != 0: continue
 
-    content = re.sub('<[^>]*?>', '', html)
+    content = re.sub('<[^>]*?>', '', htmlstr)
     if content is None: continue
     
     link    = article['link']
@@ -81,8 +82,8 @@ for article in rss['entries']:
 ## Posting articles to TWitter
 for article in articles:
     if article['cont_id'] == last_article: break
-    posts.append(get_twitter_text(article['content'], article['link']))
-    # print(get_twitter_text(article['content'], article['link']))
+    posts.append(get_twitter_text(unescape(article['content']), article['link']))
+    # print(get_twitter_text(unescape(article['content']), article['link']))
 
 for post in reversed(posts):
     auth = twitter.OAuth(consumer_key=inifile.get('twitter', 'key'),
