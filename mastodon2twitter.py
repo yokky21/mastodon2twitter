@@ -81,7 +81,7 @@ for article in rss['entries']:
 
 ## Posting articles to TWitter
 for article in articles:
-    if article['cont_id'] == last_article: break
+    if article['cont_id'] <= last_article: break
     posts.append(get_twitter_text(unescape(article['content']), article['link']))
     # print(get_twitter_text(unescape(article['content']), article['link']))
 
