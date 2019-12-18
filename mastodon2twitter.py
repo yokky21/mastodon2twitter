@@ -65,13 +65,9 @@ else:
 rss = feedparser.parse(url)
 
 for article in rss['entries']:
-    if article['mastodon_scope'] != 'public': continue
     if not re.match('New status by ', article['title']): continue
 
-    htmlstr = article['content'][0]['value'].replace('<br />', '\n').replace('</p><p>', '\n\n')
-    root    = lxml.html.fromstring(htmlstr)
-    if len(root.xpath("//p/span[@class='h-card']")) != 0: continue
-
+    htmlstr = article['summary'].replace('<br />', '\n').replace('</p><p>', '\n\n')
     content = re.sub('<[^>]*?>', '', htmlstr)
     if content is None: continue
     
