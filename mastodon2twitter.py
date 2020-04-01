@@ -65,8 +65,6 @@ else:
 rss = feedparser.parse(url)
 
 for article in rss['entries']:
-    if not re.match('New status by ', article['title']): continue
-
     htmlstr = article['summary'].replace('<br />', '\n').replace('</p><p>', '\n\n')
     content = re.sub('<[^>]*?>', '', htmlstr)
     if content is None: continue
